@@ -1,48 +1,47 @@
-class BookIssue {
+public class BookIssue {
     String title;
     String borrowerName;
     int daysOverdue;
+
     BookIssue(String title, String borrowerName, int daysOverdue) {
         this.title = title;
         this.borrowerName = borrowerName;
         this.daysOverdue = daysOverdue;
     }
+
     double fineAmount() {
-        if (daysOverdue > 0) {
-            return daysOverdue * 5;
-        } else {
-            return 0;
-        }
+        return daysOverdue > 0 ? daysOverdue * 5.0 : 0;
     }
+
     boolean isSeverelyOverdue() {
-        if (daysOverdue > 14) {
-            return true;
-        } else {
-            return false;
-        }
+        return daysOverdue > 14;
     }
-    static double totalFineCollected(BookIssue[] books) {
+
+    // totalFineCollected is static because it adds fines across many books.
+    // fineAmount is an instance method because each book has its own overdue days.
+    static double totalFineCollected(BookIssue[] issues) {
         double total = 0;
-        for (int i = 0; i < books.length; i++) {
-            total = total + books[i].fineAmount();
-        }
+        for (BookIssue issue : issues)
+            total += issue.fineAmount();
         return total;
     }
+
     public static void main(String[] args) {
-        BookIssue book1 = new BookIssue("Clean Code", "Aditi", 18);
-        BookIssue book2 = new BookIssue("Effective Java", "Rohan", 5);
-        BookIssue book3 = new BookIssue("Refactoring", "Karan", 0);
-        BookIssue book4 = new BookIssue("DSA Handbook", "Meera", 21);
-        BookIssue book5 = new BookIssue("Design Patterns", "Divya", 9);
-        BookIssue[] books = {book1, book2, book3, book4, book5};
-        for (int i = 0; i < books.length; i++) {
-            System.out.print(books[i].title + " - " + books[i].daysOverdue + " days - ");
-            if (books[i].isSeverelyOverdue()) {
-                System.out.println("Severely overdue");
-            } else {
-                System.out.println("OK");
-            }
+        BookIssue[] issues = {
+            new BookIssue("Clean Code", "Ravi", 18),
+            new BookIssue("Effective Java", "Anitha", 5),
+            new BookIssue("Refactoring", "Karthik", 0),
+            new BookIssue("DSA Handbook", "Meera", 21),
+            new BookIssue("Design Patterns", "Suresh", 9)
+        };
+
+        for (BookIssue b : issues) {
+            System.out.println(b.title + " - " + b.daysOverdue +
+                    " days - " +
+                    (b.isSeverelyOverdue() ? "Severely overdue" : "OK"));
         }
-        System.out.println("Total fine collected: Rs " + BookIssue.totalFineCollected(books));
+
+        System.out.println("Total fine collected: Rs " +
+                totalFineCollected(issues));
     }
 }
